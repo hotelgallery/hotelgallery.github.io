@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hotel Shivling — Photo Gallery</title>
+
+<!--
+  ============================================================
+  HOTEL GALLERY TEMPLATE — v2 (Editable, Brailie-style fullscreen layout)
+  ============================================================
+  NO CODE EDITING NEEDED ANYMORE.
+  Open this file in any browser -> click the pencil icon (top right)
+  -> Edit Mode turns on -> click any text to change it, click "+ Add
+  Photo" on any section to upload real photos from your phone/laptop.
+  Everything saves automatically in this browser (localStorage).
+
+  Use "Export Backup" (in edit mode) to download a .json file of
+  everything you've entered — keep this safe, and use "Import Backup"
+  to restore it (or to move your edits to another computer/browser).
+
+  To make a NEW hotel: open this same file in a different browser
+  profile / incognito window (so it doesn't share the same saved data),
+  or just Export from this one, then Import into a fresh copy of the
+  file after renaming it, e.g. river-pine.html.
+  ============================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --pine-dark:#0a0a0a;
+    --pine:#161616;
+    --pine-light:#4d4d4d;
+    --stone:#ffffff;
+    --amber:#bdbdbd;
+    --amber-light:#e6e6e6;
+    --ink:#0a0a0a;
+    --paper:#ffffff;
+    --line: rgba(255,255,255,0.22);
+    --edit: #e05b3c;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{font-family:'Inter',sans-serif; background:var(--ink); color:var(--stone); -webkit-font-smoothing:antialiased;}
+  a{color:inherit; text-decoration:none;}
+  button{font:inherit; background:none; border:none; cursor:pointer; color:inherit;}
+
+  /* ---------- Top bar (fixed, transparent -> solid on scroll not needed, keep simple translucent) ---------- */
+  .topbar{
+    position:fixed; top:0; left:0; right:0; z-index:60;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 26px;
+    mix-blend-mode:normal;
+  }
+  .topbar .brand{display:flex; align-items:center; gap:6px; font-family:'Fraunces',serif; font-weight:700; font-size:1.15rem;}
+  .topbar .brand .bracket{font-weight:400; color:rgba(255,255,255,0.55); font-size:1.3rem;}
+  .topbar .hotel-name{
+    font-family:'Fraunces',serif; font-weight:700; font-size:1.05rem; letter-spacing:0.01em;
+    outline:none;
+  }
+  .topbar-right{display:flex; align-items:center; gap:16px;}
+  .icon-btn{width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:rgba(16,25,15,0.35); border:1px solid var(--line);}
+  .hamburger{display:flex; flex-direction:column; gap:5px;}
+  .hamburger span{width:18px; height:2px; background:var(--stone); display:block; transition:transform .25s ease, opacity .25s ease;}
+  .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .hamburger.open span:nth-child(2){opacity:0;}
+  .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  .edit-toggle.active{background:var(--edit); border-color:var(--edit);}
+
+  /* ---------- Menu overlay ---------- */
+  .menu-overlay{
+    position:fixed; inset:0; z-index:70; background:var(--pine-dark); color:var(--stone);
+    display:flex; flex-direction:column; justify-content:center; padding:40px 36px;
+    transform:translateY(-100%); transition:transform .35s cubic-bezier(.6,0,.3,1);
+  }
+  .menu-overlay.show{transform:translateY(0);}
+  .menu-overlay nav{display:flex; flex-direction:column; gap:2px; margin-bottom:36px;}
+  .menu-overlay nav a{font-family:'Inter',sans-serif; font-weight:700; font-size:1.5rem; letter-spacing:0.04em; text-transform:uppercase; padding:10px 0; border-bottom:1px solid var(--line);}
+  .menu-overlay .contact-row{display:flex; gap:22px; flex-wrap:wrap; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--amber-light);}
+
+  /* ---------- Fullscreen carousel (matches reference: one viewport, arrows switch categories) ---------- */
+  .carousel{position:relative; height:100vh; min-height:560px; overflow:hidden; background:var(--pine);}
+  .cslide{
+    position:absolute; inset:0;
+    background-size:cover; background-position:center;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; visibility:hidden; transform:scale(1.03);
+    transition:opacity .6s ease, transform .8s ease, visibility 0s linear .6s;
+  }
+  .cslide.active{opacity:1; visibility:visible; transform:scale(1); transition:opacity .6s ease, transform .8s ease, visibility 0s;}
+  .cslide::after{content:""; position:absolute; inset:0; background:radial-gradient(ellipse at center, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0.4) 100%);}
+  .cslide-body{position:relative; z-index:2; text-align:center; padding:0 28px; max-width:520px;}
+  .cslide-eyebrow{font-family:'Inter',sans-serif; font-size:0.7rem; letter-spacing:0.2em; text-transform:uppercase; color:rgba(255,255,255,0.75); margin-bottom:14px;}
+  .cslide h2{
+    font-family:'Fraunces',serif; font-weight:600; font-size:clamp(2.1rem, 8vw, 3rem);
+    line-height:1.08; color:#fff; margin-bottom:26px;
+  }
+  .cslide p{font-family:'Inter',sans-serif; font-size:0.92rem; color:rgba(255,255,255,0.78); max-width:34ch; margin:0 auto 26px;}
+  .see-gallery-pill{
+    display:inline-flex; align-items:center; gap:8px;
+    background:#fff; color:#111;
+    padding:15px 30px; border-radius:40px;
+    font-family:'Fraunces',serif; font-weight:600; font-size:0.78rem;
+    letter-spacing:0.1em; text-transform:uppercase;
+  }
+  .see-gallery-pill[disabled]{opacity:0.55; pointer-events:none;}
+
+  .car-nav{
+    position:absolute; top:50%; transform:translateY(-50%); z-index:20;
+    width:44px; height:44px; display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size:1.7rem; font-weight:300;
+  }
+  .car-prev{left:14px;} .car-next{right:14px;}
+
+  .car-dots{position:absolute; bottom:22px; left:0; right:0; z-index:20; display:flex; justify-content:center; gap:7px;}
+  .car-dots span{width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,0.4);}
+  .car-dots span.active{background:#fff;}
+
+  .car-count{position:absolute; top:26px; left:50%; transform:translateX(-50%); z-index:20; font-family:'Inter',sans-serif; font-size:0.7rem; letter-spacing:0.14em; color:rgba(255,255,255,0.7);}
+
+  /* ---------- Edit mode affordances ---------- */
+  [contenteditable="true"]{ outline: 1px dashed transparent; border-radius:3px; padding:1px 4px; margin:-1px -4px; }
+  .edit-mode [contenteditable="true"]{ outline-color: rgba(224,91,60,0.6); background: rgba(224,91,60,0.08); cursor:text; }
+  .edit-mode [contenteditable="true"]:focus{ outline-color: var(--edit); background: rgba(224,91,60,0.14); }
+
+  .add-photo-btn{
+    display:none;
+    align-items:center; gap:8px;
+    font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase;
+    padding:9px 14px; border-radius:20px;
+    border:1px dashed var(--edit); color:var(--edit); background:rgba(224,91,60,0.08);
+  }
+  .edit-mode .add-photo-btn{display:inline-flex;}
+  .cover-edit{position:absolute; top:70px; right:26px; z-index:5; display:none;}
+  .edit-mode .cover-edit{display:block;}
+
+  .photo-remove{
+    position:absolute; top:6px; right:6px; z-index:6;
+    width:24px; height:24px; border-radius:50%;
+    background:var(--edit); color:#fff; font-size:0.85rem;
+    display:none; align-items:center; justify-content:center;
+  }
+  .edit-mode .photo-remove{display:flex;}
+
+  /* ---------- Contact section ---------- */
+  .contact{background:var(--pine-dark); color:var(--stone); padding:64px 26px 44px;}
+  .contact-inner{max-width:640px; margin:0 auto;}
+  .contact-eyebrow{font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--amber-light); margin-bottom:10px;}
+  .contact h2{font-family:'Inter',sans-serif; font-weight:800; text-transform:uppercase; letter-spacing:0.02em; font-size:1.9rem; margin-bottom:34px;}
+  .contact-row{display:flex; align-items:center; justify-content:space-between; padding:18px 0; border-top:1px solid var(--line);}
+  .contact-list .contact-row:last-child{border-bottom:1px solid var(--line);}
+  .contact-row .label{font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--amber-light);}
+  .contact-row .value{font-size:1rem; font-family:'Inter',sans-serif; font-weight:600; display:block;}
+  .contact-row .go{font-size:1.1rem; color:var(--amber-light);}
+  footer{text-align:center; padding:22px; font-size:0.68rem; letter-spacing:0.06em; color:var(--pine-light); background:var(--pine-dark);}
+
+  /* ---------- Edit toolbar (bottom, only visible in edit mode) ---------- */
+  .edit-toolbar{
+    position:fixed; left:0; right:0; bottom:0; z-index:80;
+    display:none; align-items:center; justify-content:center; gap:10px;
+    padding:14px 16px; background:var(--pine-dark); border-top:1px solid var(--line);
+    flex-wrap:wrap;
+  }
+  .edit-mode .edit-toolbar{display:flex;}
+  .edit-toolbar .pill{
+    font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase;
+    padding:9px 14px; border-radius:20px; border:1px solid var(--line); color:var(--stone);
+  }
+  .edit-toolbar .pill.primary{background:var(--edit); border-color:var(--edit);}
+  .edit-mode body{padding-bottom:60px;}
+
+  /* ---------- Lightbox ---------- */
+  .lightbox{position:fixed; inset:0; z-index:100; background:var(--ink); display:flex; flex-direction:column; opacity:0; pointer-events:none; transition:opacity .25s ease;}
+  .lightbox.show{opacity:1; pointer-events:auto;}
+  .lightbox-top{display:flex; align-items:center; justify-content:space-between; padding:18px 20px;}
+  .lightbox-top .lb-title{font-family:'Inter',sans-serif; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; font-size:0.9rem;}
+  .lightbox-top .lb-count{font-size:0.78rem; color:var(--amber-light);}
+  .lb-close{font-size:1.4rem; padding:6px 10px;}
+  .lb-stage{flex:1; position:relative; display:flex; align-items:center; overflow:hidden;}
+  .lb-track{display:flex; height:100%; width:100%; transition:transform .35s cubic-bezier(.6,0,.3,1);}
+  .lb-slide{min-width:100%; height:100%; background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; position:relative; background-color:var(--pine);}
+  .lb-slide .cap{position:absolute; bottom:22px; left:22px; z-index:2; font-size:0.85rem; letter-spacing:0.04em; background:rgba(0,0,0,0.35); padding:6px 12px; border-radius:20px;}
+  .lb-nav{position:absolute; top:50%; transform:translateY(-50%); width:44px; height:44px; border-radius:50%; background:rgba(255,255,255,0.12); display:flex; align-items:center; justify-content:center; font-size:1.2rem; z-index:5;}
+  .lb-prev{left:14px;} .lb-next{right:14px;}
+  .lb-dots{display:flex; justify-content:center; gap:6px; padding:16px 0 22px; flex-wrap:wrap;}
+  .lb-dots span{width:6px; height:6px; border-radius:50%; background:var(--pine-light);}
+  .lb-dots span.active{background:var(--amber-light);}
+  .lb-add{margin:0 auto 18px; display:none;}
+  .edit-mode .lb-add{display:inline-flex;}
+
+  :focus-visible{outline:2px solid var(--amber-light); outline-offset:3px;}
+  input[type=file]{display:none;}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <span class="brand"><span class="bracket">[</span><span class="hotel-name" id="fieldName" contenteditable="false" spellcheck="false">Hotel Shivling</span><span class="bracket">]</span></span>
+  <div class="topbar-right">
+    <button class="icon-btn edit-toggle" id="editToggle" aria-label="Toggle edit mode" title="Edit this site">✎</button>
+    <button class="icon-btn hamburger" id="menuBtn" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="menu-overlay" id="menuOverlay">
+  <nav id="menuLinks"></nav>
+  <div class="contact-row">
+    <a id="menuCall" href="#">Call</a>
+    <a id="menuWhatsapp" href="#" target="_blank">WhatsApp</a>
+    <a id="menuEmail" href="#">Email</a>
+  </div>
+</div>
+
+<section class="carousel" id="carousel">
+  <span class="car-count" id="carCount">1 / 7</span>
+  <button class="icon-btn cover-edit" id="heroCoverBtn" title="Change this slide's photo" style="top:70px; right:26px; position:absolute; z-index:21;">📷</button>
+  <div id="carTrack"></div>
+  <button class="car-nav car-prev" id="carPrev" aria-label="Previous">‹</button>
+  <button class="car-nav car-next" id="carNext" aria-label="Next">›</button>
+  <div class="car-dots" id="carDots"></div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <div class="contact-eyebrow">Get in touch</div>
+    <h2>Plan your stay</h2>
+    <div class="contact-list">
+      <div class="contact-row"><span><span class="label">Location</span><span class="value" id="cLocation" contenteditable="false">View on map</span></span><button class="icon-btn cover-edit" id="editLocationBtn" title="Paste this hotel's Google Maps link" style="position:static; width:30px; height:30px; margin-right:8px;">📍</button><a class="go" id="cLocationLink" href="#" target="_blank">↗</a></div>
+      <div class="contact-row"><span><span class="label">Call</span><span class="value" id="cPhone" contenteditable="false">+91 00000 00000</span></span><a class="go" id="cPhoneLink" href="#">↗</a></div>
+      <div class="contact-row"><span><span class="label">WhatsApp</span><span class="value" id="cWhats" contenteditable="false">+91 00000 00000</span></span><a class="go" id="cWhatsLink" href="#" target="_blank">↗</a></div>
+      <div class="contact-row"><span><span class="label">Email</span><span class="value" id="cEmail" contenteditable="false">info@hotel.com</span></span><a class="go" id="cEmailLink" href="#">↗</a></div>
+    </div>
+  </div>
+</section>
+
+<footer>Built with the Hotel Gallery template</footer>
+
+<div class="edit-toolbar">
+  <span class="pill" style="border:none; color:var(--amber-light);">Edit Mode — click any text, or a photo tile, to change it</span>
+  <button class="pill" id="exportBtn">Export Backup</button>
+  <button class="pill" id="importBtn">Import Backup</button>
+  <button class="pill primary" id="doneBtn">Done Editing</button>
+  <input type="file" id="importFile" accept="application/json">
+</div>
+
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-top">
+    <span class="lb-title" id="lbTitle">Rooms</span>
+    <span class="lb-count" id="lbCount">1 / 5</span>
+    <button class="lb-close" id="lbClose" aria-label="Close gallery">✕</button>
+  </div>
+  <div class="lb-stage">
+    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous photo">‹</button>
+    <div class="lb-track" id="lbTrack"></div>
+    <button class="lb-nav lb-next" id="lbNext" aria-label="Next photo">›</button>
+  </div>
+  <button class="pill lb-add" id="lbAddBtn">+ Add Photo to this Gallery</button>
+  <div class="lb-dots" id="lbDots"></div>
+</div>
+
+<script>
+/* ============================================================
+   DEFAULT DATA — used only the first time this file is opened
+   in a browser (no saved edits yet). After that, everything is
+   read from / written to localStorage, and can be edited live
+   with the pencil icon, or backed up with Export/Import.
+   ============================================================ */
+const DEFAULTS = {
+  name: "Hotel Shivling",
+  eyebrow: "Kullu · Manali",
+  tagline: "A quiet stay above the valley, five minutes from the mall road.",
+  phone: "+91 00000 00000",
+  phoneHref: "tel:+9100000000",
+  whatsapp: "+91 00000 00000",
+  whatsappHref: "https://wa.me/9100000000",
+  email: "info@hotelshivling.com",
+  mapsUrl: "https://maps.app.goo.gl/WhKhCBvqxmxEqqacA?g_st=ac",
+  heroImage: "",
+  categories: [
+    { key:"rooms", label:"Rooms", image:"", images:[] },
+    { key:"bathrooms", label:"Bathrooms", image:"", images:[] },
+    { key:"exterior", label:"Exterior", image:"", images:[] },
+    { key:"interior", label:"Interior", image:"", images:[] },
+    { key:"amenities", label:"Amenities", image:"", images:[] },
+    { key:"food", label:"Food & Drink", image:"", images:[] }
+  ]
+};
+// each images[] entry: { src: "dataURL or url", cap: "caption text" }
+
+const GRADIENTS = {
+  rooms:"linear-gradient(150deg,#0a0a0a,#4a4a4a 60%,#8a8a8a)",
+  bathrooms:"linear-gradient(150deg,#141414,#5c5c5c 60%,#c2c2c2)",
+  exterior:"linear-gradient(150deg,#0a0a0a,#3d3d3d 55%,#9a9a9a)",
+  interior:"linear-gradient(150deg,#101010,#565656 60%,#b0b0b0)",
+  amenities:"linear-gradient(150deg,#151515,#4a4a4a 55%,#a8a8a8)",
+  food:"linear-gradient(150deg,#9a9a9a,#4a4a4a 55%,#0a0a0a)"
+};
+const HERO_GRADIENT = "linear-gradient(150deg,#0a0a0a,#3d3d3d 55%,#6b6b6b 100%)";
+
+const STORAGE_KEY = "hotelGalleryConfig_v1";
+let DATA = loadData();
+
+function loadData(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULTS));
+}
+function saveData(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); }catch(e){
+    alert("Could not save — your browser storage may be full. Try Export Backup, then remove a photo or two.");
+  }
+}
+
+/* ---------- Render ---------- */
+function bgStyle(catKeyOrHero){
+  if(catKeyOrHero === 'hero'){
+    return DATA.heroImage ? `url('${DATA.heroImage}')` : HERO_GRADIENT;
+  }
+  const cat = DATA.categories.find(c=>c.key===catKeyOrHero);
+  if(cat && cat.image) return `url('${cat.image}')`;
+  if(cat && cat.images.length) return `url('${cat.images[0].src}')`;
+  return GRADIENTS[catKeyOrHero] || GRADIENTS.rooms;
+}
+
+function render(){
+  document.getElementById('fieldName').textContent = DATA.name;
+
+  document.getElementById('cLocation').textContent = "View on map";
+  document.getElementById('cLocationLink').href = DATA.mapsUrl;
+  document.getElementById('cPhone').textContent = DATA.phone;
+  document.getElementById('cPhoneLink').href = DATA.phoneHref;
+  document.getElementById('cWhats').textContent = DATA.whatsapp;
+  document.getElementById('cWhatsLink').href = DATA.whatsappHref;
+  document.getElementById('cEmail').textContent = DATA.email;
+  document.getElementById('cEmailLink').href = "mailto:" + DATA.email;
+  document.getElementById('menuCall').href = DATA.phoneHref;
+  document.getElementById('menuWhatsapp').href = DATA.whatsappHref;
+  document.getElementById('menuEmail').href = "mailto:" + DATA.email;
+
+  const track = document.getElementById('carTrack');
+  const dotsEl = document.getElementById('carDots');
+  const menuLinks = document.getElementById('menuLinks');
+  track.innerHTML = '';
+  dotsEl.innerHTML = '';
+  menuLinks.innerHTML = '';
+
+  const total = DATA.categories.length + 1; // +1 for hero/welcome slide
+  document.getElementById('carCount').textContent = `${carIndex+1} / ${total}`;
+
+  // slide 0: welcome
+  const hero = document.createElement('div');
+  hero.className = 'cslide';
+  hero.dataset.slide = '0';
+  hero.style.backgroundImage = bgStyle('hero').startsWith('url') ? bgStyle('hero') : '';
+  if(!bgStyle('hero').startsWith('url')) hero.style.background = bgStyle('hero');
+  hero.innerHTML = `
+    <div class="cslide-body">
+      <div class="cslide-eyebrow" id="fieldEyebrow" contenteditable="false">${DATA.eyebrow}</div>
+      <h2 id="fieldHeroName" contenteditable="false">${DATA.name}</h2>
+      <p id="fieldTagline" contenteditable="false">${DATA.tagline}</p>
+      <button class="see-gallery-pill" id="heroExploreBtn">Explore</button>
+    </div>
+  `;
+  track.appendChild(hero);
+  const heroDot = document.createElement('span');
+  dotsEl.appendChild(heroDot);
+
+  DATA.categories.forEach((cat, i) => {
+    const slide = document.createElement('div');
+    slide.className = 'cslide';
+    slide.dataset.slide = String(i+1);
+    const bg = bgStyle(cat.key);
+    if(bg.startsWith('url')){ slide.style.backgroundImage = bg; } else { slide.style.background = bg; }
+
+    slide.innerHTML = `
+      <div class="cslide-body">
+        <h2 contenteditable="false" data-catlabel="${cat.key}">${cat.label}</h2>
+        <button class="see-gallery-pill" data-cat="${cat.key}" ${cat.images.length ? '' : 'disabled'}>
+          ${cat.images.length ? 'See Gallery' : 'No Photos Yet'}
+        </button>
+        <div style="margin-top:16px;">
+          <button class="add-photo-btn" data-addcat="${cat.key}">+ Add Photo</button>
+        </div>
+      </div>
+    `;
+    track.appendChild(slide);
+
+    const dot = document.createElement('span');
+    dotsEl.appendChild(dot);
+
+    const a = document.createElement('a');
+    a.href = "#";
+    a.textContent = cat.label;
+    a.addEventListener('click', (e) => { e.preventDefault(); closeMenu(); goToSlide(i+1); });
+    menuLinks.appendChild(a);
+  });
+
+  updateCarousel();
+  wireEditableFields();
+}
+
+/* ---------- Carousel navigation ---------- */
+let carIndex = 0;
+function slideCount(){ return DATA.categories.length + 1; }
+function updateCarousel(){
+  const slides = document.querySelectorAll('.cslide');
+  const dots = document.querySelectorAll('.car-dots span');
+  slides.forEach((s,i) => s.classList.toggle('active', i===carIndex));
+  dots.forEach((d,i) => d.classList.toggle('active', i===carIndex));
+  const c = document.getElementById('carCount');
+  if(c) c.textContent = `${carIndex+1} / ${slideCount()}`;
+}
+function goToSlide(i){
+  carIndex = (i + slideCount()) % slideCount();
+  updateCarousel();
+}
+document.getElementById('carPrev').addEventListener('click', () => goToSlide(carIndex - 1));
+document.getElementById('carNext').addEventListener('click', () => goToSlide(carIndex + 1));
+document.addEventListener('click', (e) => {
+  if(e.target.closest('#heroExploreBtn')) goToSlide(carIndex + 1);
+});
+document.addEventListener('keydown', (e) => {
+  if(lightbox.classList.contains('show') || document.body.classList.contains('edit-mode')) return;
+  if(e.key === 'ArrowRight') goToSlide(carIndex + 1);
+  if(e.key === 'ArrowLeft') goToSlide(carIndex - 1);
+});
+let carTouchStartX = 0;
+const carouselEl = document.getElementById('carousel');
+carouselEl.addEventListener('touchstart', e => carTouchStartX = e.touches[0].clientX);
+carouselEl.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - carTouchStartX;
+  if(Math.abs(dx) < 40) return;
+  if(dx > 0) goToSlide(carIndex - 1); else goToSlide(carIndex + 1);
+});
+
+/* ---------- Edit mode ---------- */
+const editToggle = document.getElementById('editToggle');
+function setEditMode(on){
+  document.body.classList.toggle('edit-mode', on);
+  editToggle.classList.toggle('active', on);
+  document.querySelectorAll('[contenteditable]').forEach(el => el.setAttribute('contenteditable', on ? 'true' : 'false'));
+}
+editToggle.addEventListener('click', () => setEditMode(!document.body.classList.contains('edit-mode')));
+document.getElementById('doneBtn').addEventListener('click', () => setEditMode(false));
+
+function wireEditableFields(){
+  bindText('fieldName', v => DATA.name = v);
+  bindText('fieldHeroName', v => DATA.name = v);
+  bindText('fieldEyebrow', v => DATA.eyebrow = v);
+  bindText('fieldTagline', v => DATA.tagline = v);
+  bindText('cPhone', v => { DATA.phone = v; DATA.phoneHref = "tel:" + v.replace(/[^0-9+]/g,''); });
+  bindText('cWhats', v => { DATA.whatsapp = v; DATA.whatsappHref = "https://wa.me/" + v.replace(/[^0-9]/g,''); });
+  bindText('cEmail', v => DATA.email = v);
+
+  document.querySelectorAll('[data-catlabel]').forEach(h2 => {
+    h2.addEventListener('blur', () => {
+      const cat = DATA.categories.find(c=>c.key===h2.dataset.catlabel);
+      if(cat){ cat.label = h2.textContent.trim(); saveData(); render(); }
+    });
+  });
+
+  // keep hotel name in sync live between topbar and hero slide while typing
+  ['fieldName','fieldHeroName'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener('input', e => {
+      const v = e.target.textContent;
+      const nameEl = document.getElementById('fieldName');
+      const heroEl = document.getElementById('fieldHeroName');
+      if(nameEl) nameEl.textContent = v;
+      if(heroEl) heroEl.textContent = v;
+    });
+  });
+}
+function bindText(id, onSave){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.addEventListener('blur', () => { onSave(el.textContent.trim()); saveData(); render(); });
+}
+
+/* ---------- Photo upload ---------- */
+function fileToDataUrl(file){
+  return new Promise((resolve,reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
+function pickImage(onPicked){
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*';
+  input.addEventListener('change', async () => {
+    if(input.files && input.files[0]){
+      const dataUrl = await fileToDataUrl(input.files[0]);
+      onPicked(dataUrl);
+    }
+  });
+  input.click();
+}
+
+document.getElementById('editLocationBtn').addEventListener('click', () => {
+  const current = DATA.mapsUrl && DATA.mapsUrl !== "https://maps.google.com" ? DATA.mapsUrl : "";
+  const url = prompt("Paste this hotel's Google Maps link (from Google Maps app -> Share -> Copy link):", current);
+  if(url && url.trim()){
+    DATA.mapsUrl = url.trim();
+    saveData(); render();
+  }
+});
+
+document.getElementById('heroCoverBtn').addEventListener('click', () => {
+  const slideAt = carIndex;
+  pickImage(dataUrl => {
+    if(slideAt === 0){ DATA.heroImage = dataUrl; }
+    else { DATA.categories[slideAt-1].image = dataUrl; }
+    saveData(); render(); goToSlide(slideAt);
+  });
+});
+
+document.addEventListener('click', (e) => {
+  const addBtn = e.target.closest('[data-addcat]');
+  if(addBtn){
+    const key = addBtn.dataset.addcat;
+    pickImage(dataUrl => {
+      const cat = DATA.categories.find(c=>c.key===key);
+      const label = prompt("Short label for this photo (e.g. 'Deluxe Room'):", cat.label) || cat.label;
+      cat.images.push({ src: dataUrl, cap: label });
+      saveData(); render();
+    });
+  }
+});
+
+/* ---------- Menu ---------- */
+const menuBtn = document.getElementById('menuBtn');
+const menuOverlay = document.getElementById('menuOverlay');
+menuBtn.addEventListener('click', () => { menuBtn.classList.toggle('open'); menuOverlay.classList.toggle('show'); });
+function closeMenu(){ menuBtn.classList.remove('open'); menuOverlay.classList.remove('show'); }
+
+/* ---------- Lightbox ---------- */
+const lightbox = document.getElementById('lightbox');
+const lbTrack = document.getElementById('lbTrack');
+const lbTitle = document.getElementById('lbTitle');
+const lbCount = document.getElementById('lbCount');
+const lbDots = document.getElementById('lbDots');
+let currentSlide = 0, currentCatKey = null;
+
+function openGallery(catKey, startIndex){
+  const cat = DATA.categories.find(c => c.key === catKey);
+  if(!cat.images.length) return;
+  currentCatKey = catKey;
+  lbTitle.textContent = cat.label;
+  renderLightbox();
+  currentSlide = startIndex || 0;
+  updateSlide();
+  lightbox.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function renderLightbox(){
+  const cat = DATA.categories.find(c => c.key === currentCatKey);
+  lbTrack.innerHTML = ''; lbDots.innerHTML = '';
+  cat.images.forEach((image, i) => {
+    const slide = document.createElement('div');
+    slide.className = 'lb-slide';
+    slide.style.backgroundImage = `url('${image.src}')`;
+    slide.innerHTML = `<span class="cap">${image.cap || ''}</span><button class="photo-remove" data-removeidx="${i}" title="Remove photo">✕</button>`;
+    lbTrack.appendChild(slide);
+    const dot = document.createElement('span');
+    if(i===currentSlide) dot.className = 'active';
+    lbDots.appendChild(dot);
+  });
+}
+function updateSlide(){
+  const cat = DATA.categories.find(c => c.key === currentCatKey);
+  if(!cat.images.length){ closeLightbox(); return; }
+  if(currentSlide >= cat.images.length) currentSlide = cat.images.length - 1;
+  lbTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+  lbCount.textContent = `${currentSlide+1} / ${cat.images.length}`;
+  [...lbDots.children].forEach((d,i) => d.classList.toggle('active', i===currentSlide));
+}
+document.getElementById('lbPrev').addEventListener('click', () => {
+  const cat = DATA.categories.find(c => c.key === currentCatKey);
+  currentSlide = (currentSlide - 1 + cat.images.length) % cat.images.length; updateSlide();
+});
+document.getElementById('lbNext').addEventListener('click', () => {
+  const cat = DATA.categories.find(c => c.key === currentCatKey);
+  currentSlide = (currentSlide + 1) % cat.images.length; updateSlide();
+});
+document.getElementById('lbClose').addEventListener('click', closeLightbox);
+function closeLightbox(){ lightbox.classList.remove('show'); document.body.style.overflow=''; }
+document.getElementById('lbAddBtn').addEventListener('click', () => {
+  pickImage(dataUrl => {
+    const cat = DATA.categories.find(c => c.key === currentCatKey);
+    const label = prompt("Short label for this photo:", cat.label) || cat.label;
+    cat.images.push({ src: dataUrl, cap: label });
+    saveData(); renderLightbox(); currentSlide = cat.images.length - 1; updateSlide(); render();
+  });
+});
+lbTrack.addEventListener('click', (e) => {
+  const rm = e.target.closest('[data-removeidx]');
+  if(rm && document.body.classList.contains('edit-mode')){
+    const cat = DATA.categories.find(c => c.key === currentCatKey);
+    cat.images.splice(Number(rm.dataset.removeidx), 1);
+    saveData(); renderLightbox(); updateSlide(); render();
+  }
+});
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.see-gallery-pill[data-cat]');
+  if(btn && !btn.disabled) openGallery(btn.dataset.cat, 0);
+});
+document.addEventListener('keydown', (e) => {
+  if(!lightbox.classList.contains('show')) return;
+  if(e.key === 'Escape') closeLightbox();
+  if(e.key === 'ArrowRight') document.getElementById('lbNext').click();
+  if(e.key === 'ArrowLeft') document.getElementById('lbPrev').click();
+});
+let touchStartX = 0;
+lbTrack.addEventListener('touchstart', e => touchStartX = e.touches[0].clientX);
+lbTrack.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if(dx > 50) document.getElementById('lbPrev').click();
+  if(dx < -50) document.getElementById('lbNext').click();
+});
+
+/* ---------- Export / Import ---------- */
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(DATA, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = (DATA.name || 'hotel').replace(/\s+/g,'-').toLowerCase() + '-backup.json';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
+document.getElementById('importFile').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  try{
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    DATA = parsed;
+    saveData(); render();
+    alert("Backup imported.");
+  }catch(err){
+    alert("Could not read that file — make sure it's a backup exported from this same tool.");
+  }
+});
+
+render();
+</script>
+</body>
+</html>
