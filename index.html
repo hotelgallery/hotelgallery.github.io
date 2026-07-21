@@ -7,24 +7,35 @@
 
 <!--
   ============================================================
-  HOTEL GALLERY TEMPLATE — v2 (Editable, Brailie-style fullscreen layout)
+  HOTEL GALLERY TEMPLATE — v3 (Editable, owner-only edit access)
   ============================================================
-  NO CODE EDITING NEEDED ANYMORE.
-  Open this file in any browser -> click the pencil icon (top right)
-  -> Edit Mode turns on -> click any text to change it, click "+ Add
-  Photo" on any section to upload real photos from your phone/laptop.
-  Everything saves automatically in this browser (localStorage).
+  EDIT ACCESS IS NOW PRIVATE.
+  Nobody sees an edit button by default. To edit, open this file
+  (or your published URL) with a secret key, e.g.:
+      hotel-gallery-carousel.html?edit=shivling2026
+  Change EDIT_KEY inside the <script> below to your own secret
+  word for each hotel before publishing. See the "WHO CAN EDIT"
+  note in the script for the full (honest) explanation of what
+  this does and doesn't protect against.
+
+  Once unlocked with the correct link, click the pencil icon
+  (top right) -> Edit Mode turns on -> click any text to change
+  it, click "+ Add Photo" / the camera icon on any slide to
+  upload real photos. Everything saves automatically in this
+  browser (localStorage). Click "Done Editing" to exit — the
+  pencil stays visible only to you on this browser going forward.
 
   Use "Export Backup" (in edit mode) to download a .json file of
   everything you've entered — keep this safe, and use "Import Backup"
   to restore it (or to move your edits to another computer/browser).
 
-  To make a NEW hotel: open this same file in a different browser
-  profile / incognito window (so it doesn't share the same saved data),
-  or just Export from this one, then Import into a fresh copy of the
-  file after renaming it, e.g. river-pine.html.
+  To make a NEW hotel: copy this file, give it a new EDIT_KEY,
+  open it fresh (new browser profile / incognito, or clear
+  localStorage first) so it doesn't share the old hotel's saved
+  data, then fill it in and publish under that hotel's URL/folder.
   ============================================================
 -->
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -87,18 +98,22 @@
   .carousel{position:relative; height:100vh; min-height:560px; overflow:hidden; background:var(--pine);}
   .cslide{
     position:absolute; inset:0;
-    background-size:cover; background-position:center;
     display:flex; align-items:center; justify-content:center;
     opacity:0; visibility:hidden; transform:scale(1.03);
     transition:opacity .6s ease, transform .8s ease, visibility 0s linear .6s;
   }
   .cslide.active{opacity:1; visibility:visible; transform:scale(1); transition:opacity .6s ease, transform .8s ease, visibility 0s;}
-  .cslide::after{content:""; position:absolute; inset:0; background:radial-gradient(ellipse at center, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0.4) 100%);}
-  .cslide-body{position:relative; z-index:2; text-align:center; padding:0 28px; max-width:520px;}
+  /* backdrop: blurred, cropped copy fills the whole screen so there's never empty space */
+  .cslide-bg{position:absolute; inset:0; z-index:0; background-size:cover; background-position:center; background-color:var(--pine); filter:blur(32px) brightness(0.55); transform:scale(1.15);}
+  /* foreground: the actual photo, shown in full (no cropping) — vertical photos stay vertical, horizontal stay horizontal */
+  .cslide-img{position:absolute; inset:0; z-index:1; background-size:contain; background-position:center; background-repeat:no-repeat;}
+  .cslide::after{content:""; position:absolute; inset:0; z-index:2; background:radial-gradient(ellipse at center, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.4) 100%);}
+  .cslide-body{position:relative; z-index:3; text-align:center; padding:0 28px; max-width:520px;}
   .cslide-eyebrow{font-family:'Inter',sans-serif; font-size:0.7rem; letter-spacing:0.2em; text-transform:uppercase; color:rgba(255,255,255,0.75); margin-bottom:14px;}
   .cslide h2{
     font-family:'Fraunces',serif; font-weight:600; font-size:clamp(2.1rem, 8vw, 3rem);
     line-height:1.08; color:#fff; margin-bottom:26px;
+    text-shadow:0 2px 18px rgba(0,0,0,0.5);
   }
   .cslide p{font-family:'Inter',sans-serif; font-size:0.92rem; color:rgba(255,255,255,0.78); max-width:34ch; margin:0 auto 26px;}
   .see-gallery-pill{
@@ -183,7 +198,9 @@
   .lb-close{font-size:1.4rem; padding:6px 10px;}
   .lb-stage{flex:1; position:relative; display:flex; align-items:center; overflow:hidden;}
   .lb-track{display:flex; height:100%; width:100%; transition:transform .35s cubic-bezier(.6,0,.3,1);}
-  .lb-slide{min-width:100%; height:100%; background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; position:relative; background-color:var(--pine);}
+  .lb-slide{min-width:100%; height:100%; display:flex; align-items:center; justify-content:center; position:relative; background-color:var(--pine); overflow:hidden;}
+  .lb-slide .lb-bg{position:absolute; inset:0; z-index:0; background-size:cover; background-position:center; filter:blur(32px) brightness(0.5); transform:scale(1.15);}
+  .lb-slide .lb-img{position:absolute; inset:0; z-index:1; background-size:contain; background-position:center; background-repeat:no-repeat;}
   .lb-slide .cap{position:absolute; bottom:22px; left:22px; z-index:2; font-size:0.85rem; letter-spacing:0.04em; background:rgba(0,0,0,0.35); padding:6px 12px; border-radius:20px;}
   .lb-nav{position:absolute; top:50%; transform:translateY(-50%); width:44px; height:44px; border-radius:50%; background:rgba(255,255,255,0.12); display:flex; align-items:center; justify-content:center; font-size:1.2rem; z-index:5;}
   .lb-prev{left:14px;} .lb-next{right:14px;}
@@ -202,12 +219,13 @@
 <nav class="topbar">
   <span class="brand"><span class="bracket">[</span><span class="hotel-name" id="fieldName" contenteditable="false" spellcheck="false">Hotel Shivling</span><span class="bracket">]</span></span>
   <div class="topbar-right">
-    <button class="icon-btn edit-toggle" id="editToggle" aria-label="Toggle edit mode" title="Edit this site">✎</button>
+    <button class="icon-btn edit-toggle" id="editToggle" aria-label="Toggle edit mode" title="Edit this site" style="display:none;">✎</button>
     <button class="icon-btn hamburger" id="menuBtn" aria-label="Open menu"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
 <div class="menu-overlay" id="menuOverlay">
+  <button class="lb-close" id="menuClose" aria-label="Close menu" style="position:absolute; top:22px; right:26px;">✕</button>
   <nav id="menuLinks"></nav>
   <div class="contact-row">
     <a id="menuCall" href="#">Call</a>
@@ -227,8 +245,8 @@
 
 <section class="contact" id="contact">
   <div class="contact-inner">
-    <div class="contact-eyebrow">Get in touch</div>
-    <h2>Plan your stay</h2>
+    <div class="contact-eyebrow" id="fieldContactEyebrow" contenteditable="false">Get in touch</div>
+    <h2 id="fieldContactHeading" contenteditable="false">Plan your stay</h2>
     <div class="contact-list">
       <div class="contact-row"><span><span class="label">Location</span><span class="value" id="cLocation" contenteditable="false">View on map</span></span><button class="icon-btn cover-edit" id="editLocationBtn" title="Paste this hotel's Google Maps link" style="position:static; width:30px; height:30px; margin-right:8px;">📍</button><a class="go" id="cLocationLink" href="#" target="_blank">↗</a></div>
       <div class="contact-row"><span><span class="label">Call</span><span class="value" id="cPhone" contenteditable="false">+91 00000 00000</span></span><a class="go" id="cPhoneLink" href="#">↗</a></div>
@@ -238,7 +256,7 @@
   </div>
 </section>
 
-<footer>Built with the Hotel Gallery template</footer>
+<footer id="fieldFooter" contenteditable="false">© 2026 Hotel Gallery. All Rights Reserved.</footer>
 
 <div class="edit-toolbar">
   <span class="pill" style="border:none; color:var(--amber-light);">Edit Mode — click any text, or a photo tile, to change it</span>
@@ -281,11 +299,14 @@ const DEFAULTS = {
   email: "info@hotelshivling.com",
   mapsUrl: "https://maps.app.goo.gl/WhKhCBvqxmxEqqacA?g_st=ac",
   heroImage: "",
+  contactEyebrow: "Get in touch",
+  contactHeading: "Plan your stay",
+  footerText: "© 2026 Hotel Gallery. All Rights Reserved.",
   categories: [
-    { key:"rooms", label:"Rooms", image:"", images:[] },
-    { key:"bathrooms", label:"Bathrooms", image:"", images:[] },
     { key:"exterior", label:"Exterior", image:"", images:[] },
     { key:"interior", label:"Interior", image:"", images:[] },
+    { key:"rooms", label:"Rooms", image:"", images:[] },
+    { key:"bathrooms", label:"Bathrooms", image:"", images:[] },
     { key:"amenities", label:"Amenities", image:"", images:[] },
     { key:"food", label:"Food & Drink", image:"", images:[] }
   ]
@@ -328,9 +349,22 @@ function bgStyle(catKeyOrHero){
   if(cat && cat.images.length) return `url('${cat.images[0].src}')`;
   return GRADIENTS[catKeyOrHero] || GRADIENTS.rooms;
 }
+// Real photos: blurred cover backdrop + the actual photo shown in full (contain), so
+// vertical photos stay vertical and horizontal photos stay horizontal — nothing cropped.
+// Placeholder gradients: just a single plain div, no photo to preserve.
+function slideBgHTML(bg){
+  if(bg.startsWith('url')){
+    const esc = bg.replace(/"/g,'&quot;');
+    return `<div class="cslide-bg" style="background-image:${esc}"></div><div class="cslide-img" style="background-image:${esc}"></div>`;
+  }
+  return `<div class="cslide-bg" style="background:${bg}"></div>`;
+}
 
 function render(){
   document.getElementById('fieldName').textContent = DATA.name;
+  document.getElementById('fieldContactEyebrow').textContent = DATA.contactEyebrow || "Get in touch";
+  document.getElementById('fieldContactHeading').textContent = DATA.contactHeading || "Plan your stay";
+  document.getElementById('fieldFooter').textContent = DATA.footerText || "© 2026 Hotel Gallery. All Rights Reserved.";
 
   document.getElementById('cLocation').textContent = "View on map";
   document.getElementById('cLocationLink').href = DATA.mapsUrl;
@@ -358,14 +392,16 @@ function render(){
   const hero = document.createElement('div');
   hero.className = 'cslide';
   hero.dataset.slide = '0';
-  hero.style.backgroundImage = bgStyle('hero').startsWith('url') ? bgStyle('hero') : '';
-  if(!bgStyle('hero').startsWith('url')) hero.style.background = bgStyle('hero');
   hero.innerHTML = `
+    ${slideBgHTML(bgStyle('hero'))}
     <div class="cslide-body">
       <div class="cslide-eyebrow" id="fieldEyebrow" contenteditable="false">${DATA.eyebrow}</div>
       <h2 id="fieldHeroName" contenteditable="false">${DATA.name}</h2>
       <p id="fieldTagline" contenteditable="false">${DATA.tagline}</p>
       <button class="see-gallery-pill" id="heroExploreBtn">Explore</button>
+      <div style="margin-top:16px;">
+        <button class="add-photo-btn" id="heroAddPhotoBtn">+ Add Cover Photo</button>
+      </div>
     </div>
   `;
   track.appendChild(hero);
@@ -376,10 +412,9 @@ function render(){
     const slide = document.createElement('div');
     slide.className = 'cslide';
     slide.dataset.slide = String(i+1);
-    const bg = bgStyle(cat.key);
-    if(bg.startsWith('url')){ slide.style.backgroundImage = bg; } else { slide.style.background = bg; }
 
     slide.innerHTML = `
+      ${slideBgHTML(bgStyle(cat.key))}
       <div class="cslide-body">
         <h2 contenteditable="false" data-catlabel="${cat.key}">${cat.label}</h2>
         <button class="see-gallery-pill" data-cat="${cat.key}" ${cat.images.length ? '' : 'disabled'}>
@@ -440,8 +475,44 @@ carouselEl.addEventListener('touchend', e => {
   if(dx > 0) goToSlide(carIndex - 1); else goToSlide(carIndex + 1);
 });
 
+/* ============================================================
+   WHO CAN EDIT — read this before publishing
+   ============================================================
+   By default, NO ONE sees the edit pencil — it's hidden.
+   It only appears if you open the page with a secret key in the
+   URL, like:  yoursite.html?edit=shivling2026
+
+   Change EDIT_KEY below to your own secret word for each hotel
+   before you publish it. The first time you visit with the
+   correct ?edit=... link, this browser remembers you're the
+   owner (saved locally) and will keep showing the pencil to you
+   from then on — even without the ?edit= part in the URL.
+   Anyone else opening the plain URL never sees any edit controls.
+
+   HONEST LIMITATION: this key lives in the page's own code, so
+   it is NOT bank-grade security — a determined technical person
+   could view the page source and find it. It's a lock on your
+   front door, not a bank vault. For an ordinary hotel guest or
+   visitor, they will never see or find the edit option. If you
+   ever need real, unbreakable access control (e.g. multiple staff
+   logins, can't-be-viewed-in-source protection), that requires a
+   real backend/server — a bigger step we can take later.
+   ============================================================ */
+const EDIT_KEY = "shivling2026"; // <-- change this per hotel before publishing
+const EDIT_UNLOCK_STORAGE = "hg_owner_unlocked";
+(function checkEditAccess(){
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('edit') === EDIT_KEY){
+    try{ localStorage.setItem(EDIT_UNLOCK_STORAGE, '1'); }catch(e){}
+  }
+})();
+function ownerIsUnlocked(){
+  try{ return localStorage.getItem(EDIT_UNLOCK_STORAGE) === '1'; }catch(e){ return false; }
+}
+
 /* ---------- Edit mode ---------- */
 const editToggle = document.getElementById('editToggle');
+if(ownerIsUnlocked()){ editToggle.style.display = 'flex'; }
 function setEditMode(on){
   document.body.classList.toggle('edit-mode', on);
   editToggle.classList.toggle('active', on);
@@ -455,6 +526,9 @@ function wireEditableFields(){
   bindText('fieldHeroName', v => DATA.name = v);
   bindText('fieldEyebrow', v => DATA.eyebrow = v);
   bindText('fieldTagline', v => DATA.tagline = v);
+  bindText('fieldContactEyebrow', v => DATA.contactEyebrow = v);
+  bindText('fieldContactHeading', v => DATA.contactHeading = v);
+  bindText('fieldFooter', v => DATA.footerText = v);
   bindText('cPhone', v => { DATA.phone = v; DATA.phoneHref = "tel:" + v.replace(/[^0-9+]/g,''); });
   bindText('cWhats', v => { DATA.whatsapp = v; DATA.whatsappHref = "https://wa.me/" + v.replace(/[^0-9]/g,''); });
   bindText('cEmail', v => DATA.email = v);
@@ -469,7 +543,8 @@ function wireEditableFields(){
   // keep hotel name in sync live between topbar and hero slide while typing
   ['fieldName','fieldHeroName'].forEach(id=>{
     const el = document.getElementById(id);
-    if(!el) return;
+    if(!el || el.dataset.inputBound === '1') return;
+    el.dataset.inputBound = '1';
     el.addEventListener('input', e => {
       const v = e.target.textContent;
       const nameEl = document.getElementById('fieldName');
@@ -481,7 +556,8 @@ function wireEditableFields(){
 }
 function bindText(id, onSave){
   const el = document.getElementById(id);
-  if(!el) return;
+  if(!el || el.dataset.bound === '1') return;
+  el.dataset.bound = '1';
   el.addEventListener('blur', () => { onSave(el.textContent.trim()); saveData(); render(); });
 }
 
@@ -523,6 +599,14 @@ document.getElementById('heroCoverBtn').addEventListener('click', () => {
     saveData(); render(); goToSlide(slideAt);
   });
 });
+
+document.addEventListener('click', (e) => {
+  if(e.target.closest('#heroAddPhotoBtn')){
+    pickImage(dataUrl => { DATA.heroImage = dataUrl; saveData(); render(); goToSlide(0); });
+  }
+});
+
+document.getElementById('menuClose').addEventListener('click', closeMenu);
 
 document.addEventListener('click', (e) => {
   const addBtn = e.target.closest('[data-addcat]');
@@ -568,8 +652,8 @@ function renderLightbox(){
   cat.images.forEach((image, i) => {
     const slide = document.createElement('div');
     slide.className = 'lb-slide';
-    slide.style.backgroundImage = `url('${image.src}')`;
-    slide.innerHTML = `<span class="cap">${image.cap || ''}</span><button class="photo-remove" data-removeidx="${i}" title="Remove photo">✕</button>`;
+    const url = `url('${image.src}')`;
+    slide.innerHTML = `<div class="lb-bg" style="background-image:${url}"></div><div class="lb-img" style="background-image:${url}"></div><span class="cap">${image.cap || ''}</span><button class="photo-remove" data-removeidx="${i}" title="Remove photo">✕</button>`;
     lbTrack.appendChild(slide);
     const dot = document.createElement('span');
     if(i===currentSlide) dot.className = 'active';
