@@ -1,55 +1,103 @@
 {
   "heroEyebrow": "For Hotels Across India",
   "heroTitleHTML": "Your rooms look <em>incredible</em>.<br>Does your listing?",
-  "heroSubtitle": "Hotel Gallery gives your property a fast, premium, mobile-first photo showcase — the kind guests actually want to scroll through — with one tap to call or WhatsApp you directly. No OTA commission on that conversation.",
+  "heroSubtitle": "Hotel Gallery gives your property a fast, premium, mobile-first photo showcase.",
   "ctaPrimaryLabel": "See The Live Demo →",
   "ctaSecondaryLabel": "Get Your Hotel Listed",
   "trustLine": "No app to install, no dashboard to learn — you send us photos, we handle the rest.",
   "demoHotelSlug": "akari-inn",
   "phoneCaption": "↑ That's a real, live page — not a mockup.",
-
   "benefitsEyebrow": "Why It Works",
   "benefitsTitle": "Built around how guests actually browse",
-  "benefitsSub": "Most hotel listings are an afterthought. Hotel Gallery is the opposite — every detail is built to make your property look worth booking.",
+  "benefitsSub": "",
   "benefits": [
-    { "label": "Photography", "title": "Full-screen, not cropped", "desc": "Every photo shows exactly as taken — vertical or horizontal — instead of squeezed into a tiny thumbnail grid." },
-    { "label": "Direct Contact", "title": "Straight to you", "desc": "Call and WhatsApp buttons are built in. Guests reach you directly — no OTA commission on that booking." },
-    { "label": "Mobile First", "title": "Made for the phone", "desc": "Over 90% of guests browse hotels on their phone. This is designed for that screen first, not squeezed to fit it." },
-    { "label": "Zero Effort", "title": "You send photos, we do the rest", "desc": "No dashboard, no app, no learning curve. Send your photos and details — your page goes live." }
+    {
+      "label": "Photography",
+      "title": "Full-screen, not cropped",
+      "desc": "Every photo shows exactly as taken — vertical or horizontal — instead of squeezed into a tiny thumbnail grid."
+    },
+    {
+      "label": "Direct Contact",
+      "title": "Straight to you",
+      "desc": "Call and WhatsApp buttons are built in. Guests reach you directly — no OTA commission on that booking."
+    },
+    {
+      "label": "Mobile First",
+      "title": "Made for the phone",
+      "desc": "Over 90% of guests browse hotels on their phone. This is designed for that screen first, not squeezed to fit it."
+    },
+    {
+      "label": "Zero Effort",
+      "title": "Send photos, we do rest",
+      "desc": "No dashboard, no app, no learning curve. Send your photos and details — your page goes live."
+    }
   ],
-
   "compareEyebrow": "The Difference",
   "compareTitle": "What guests see today vs. what they could see",
   "compareBadTag": "Typical OTA Listing",
-  "compareBadImage": "",
-  "compareBadNote": "Small, cropped thumbnails. Competing hotels one scroll away. Booking fee eats into every reservation.",
+  "compareBadImage": "images/homepage/ota.webp",
+  "compareBadNote": "",
   "compareGoodTag": "Hotel Gallery Page",
-  "compareGoodImage": "",
-  "compareGoodLabel": "Akari Inn",
-  "compareGoodNote": "Full-screen photography, your brand only, direct call/WhatsApp — nothing competing for attention.",
-
+  "compareGoodImage": "images/homepage/AkariInn home page.webp",
+  "compareGoodLabel": "Your Hotel",
+  "compareGoodNote": "",
   "demoEyebrow": "See It Yourself",
   "demoTitle": "Open the live demo hotel",
-  "demoSub": "This is a real, working example — the same kind of page your hotel would get.",
+  "demoSub": "",
   "demoButtonLabel": "Open Full Demo ↗",
-
   "pricingEyebrow": "Pricing",
   "pricingTitle": "Simple, one-time setup",
-  "pricingSub": "Choose based on how many photos and categories your property needs.",
+  "pricingSub": "",
   "pricing": [
-    { "tier": "Starter", "amount": "₹2,999", "desc": "A clean, single page for a small property.", "features": ["Up to 4 photo categories", "Up to 20 photos total", "Call & WhatsApp buttons", "Live in 3–5 days"], "ctaLabel": "Choose Starter", "featured": false },
-    { "tier": "Premium", "amount": "₹6,999", "desc": "Our most popular option for full-service hotels.", "features": ["All 6 photo categories", "Up to 50 photos total", "Call, WhatsApp & map link", "Basic photo touch-ups included", "Live in 2–4 days"], "ctaLabel": "Choose Premium", "featured": true },
-    { "tier": "Elite", "amount": "₹14,999", "desc": "For properties that want the full showcase treatment.", "features": ["Unlimited photo categories", "Unlimited photos", "Professional photo editing", "Priority support & updates", "Live in 2–3 days"], "ctaLabel": "Choose Elite", "featured": false }
+    {
+      "tier": "Starter",
+      "amount": "₹2,999",
+      "desc": "",
+      "features": [
+        "Up to 3 photo categories",
+        "Up to 12 photos total",
+        "Call & WhatsApp buttons",
+        "Live in 5-7 days"
+      ],
+      "ctaLabel": "Choose Starter",
+      "featured": false
+    },
+    {
+      "tier": "Premium",
+      "amount": "₹6,999",
+      "desc": "",
+      "features": [
+        "All 6 photo categories",
+        "Up to 30 photos total",
+        "Call, WhatsApp & map link",
+        "Basic photo touch-ups included",
+        "Live in 7–10 days"
+      ],
+      "ctaLabel": "Choose Premium",
+      "featured": true
+    },
+    {
+      "tier": "Elite",
+      "amount": "₹14,999",
+      "desc": "",
+      "features": [
+        "Unlimited photo categories",
+        "Unlimited photos",
+        "Professional photo editing",
+        "Priority support & updates",
+        "Live in 10–15 days"
+      ],
+      "ctaLabel": "Choose Elite",
+      "featured": false
+    }
   ],
-
   "ctaEyebrow": "Get In Touch",
   "ctaTitle": "Let's get your hotel online this week",
-  "ctaSub": "Send your photos and a few details — we'll handle the rest.",
-
-  "phone": "+91 00000 00000",
-  "phoneHref": "tel:+9100000000",
-  "whatsapp": "+91 00000 00000",
-  "whatsappHref": "https://wa.me/9100000000",
-  "email": "info@hotelgallery.in",
+  "ctaSub": "",
+  "phone": "+91 7018222597",
+  "phoneHref": "tel:+917018222597",
+  "whatsapp": "+91 7018222597",
+  "whatsappHref": "https://wa.me/917018222597",
+  "email": "hotelgallery@gmail.com",
   "footerText": "© 2026 Hotel Gallery. All Rights Reserved."
 }
