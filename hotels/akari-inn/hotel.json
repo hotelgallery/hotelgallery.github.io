@@ -1,0 +1,155 @@
+{
+  "name": "Akari Inn",
+  "eyebrow": "Kullu · Manali",
+  "tagline": "A quiet stay above the valley, five minutes from the mall road.",
+  "phone": "+91 8988444403",
+  "phoneHref": "tel:+918988444403",
+  "whatsapp": "+91 8580404290",
+  "whatsappHref": "https://wa.me/918580404290",
+  "email": "ishan@akariinn.com",
+  "mapsUrl": "https://share.google/1TIR5ClVvJSEDJ8VD",
+  "heroImage": "hotels/akari-inn/gallery/hero/cover.webp",
+  "contactEyebrow": "Get in touch",
+  "contactHeading": "Plan your stay",
+  "footerText": "© 2026 Hotel Gallery. All Rights Reserved.",
+  "categories": [
+    {
+      "key": "exterior",
+      "label": "Exterior",
+      "image": "",
+      "images": [
+        {
+          "src": "hotels/akari-inn/gallery/exterior/exterior-1.webp",
+          "cap": "Exterior"
+        },
+        {
+          "src": "hotels/akari-inn/gallery/exterior/exterior-2.webp",
+          "cap": "Exterior"
+        },
+        {
+          "src": "hotels/akari-inn/gallery/exterior/exterior-3.webp",
+          "cap": "Exterior"
+        },
+        {
+          "src": "hotels/akari-inn/gallery/exterior/exterior-4.webp",
+          "cap": "Exterior"
+        }
+      ]
+    },
+    {
+      "key": "interior",
+      "label": "Interior",
+      "image": "",
+      "images": [
+        {
+          "src": "hotels/akari-inn/gallery/interior/interior-1.webp",
+          "cap": "Interior"
+        },
+        {
+          "src": "hotels/akari-inn/gallery/interior/interior-2.webp",
+          "cap": "Interior"
+        },
+        {
+          "src": "hotels/akari-inn/gallery/interior/interior-3.webp",
+          "cap": "Interior"
+        },
+        {
+          "src": "hotels/akari-inn/gallery/interior/interior-4.webp",
+          "cap": "Interior"
+        },
+        {
+          "src": "hotels/akari-inn/gallery/interior/interior-5.webp",
+          "cap": "Interior"
+        }
+      ]
+    },
+    {
+      "key": "rooms",
+      "label": "Rooms",
+      "image": "",
+      "images": [
+        {
+          "src": "hotels/akari-inn/gallery/rooms/room-1.webp",
+          "cap": "Rooms"
+        },
+        {
+          "src": "hotels/akari-inn/gallery/rooms/room-2.webp",
+          "cap": "Rooms"
+        },
+        {
+          "src": "hotels/akari-inn/gallery/rooms/room-3.webp",
+          "cap": "Rooms"
+        },
+        {
+          "src": "hotels/akari-inn/gallery/rooms/room-4.webp",
+          "cap": "Rooms"
+        },
+        {
+          "src": "hotels/akari-inn/gallery/rooms/room-5.webp",
+          "cap": "Rooms"
+        },
+        {
+          "src": "hotels/akari-inn/gallery/rooms/room-6.webp",
+          "cap": "Rooms"
+        }
+      ]
+    },
+    {
+      "key": "bathrooms",
+      "label": "Bathrooms",
+      "image": "",
+      "images": [
+        {
+          "src": "hotels/akari-inn/gallery/bathrooms/bathroom-1.webp",
+          "cap": "Bathrooms"
+        },
+        {
+          "src": "hotels/akari-inn/gallery/bathrooms/bathroom-2.webp",
+          "cap": "Bathrooms"
+        }
+      ]
+    },
+    {
+      "key": "amenities",
+      "label": "Amenities",
+      "image": "",
+      "images": [
+        {
+          "src": "hotels/akari-inn/gallery/amenities/amenities-1.webp",
+          "cap": "Amenities"
+        },
+        {
+          "src": "hotels/akari-inn/gallery/amenities/amenities-2.webp",
+          "cap": "Amenities"
+        },
+        {
+          "src": "hotels/akari-inn/gallery/amenities/amenities-3.webp",
+          "cap": "Amenities"
+        }
+      ]
+    },
+    {
+      "key": "food",
+      "label": "Food & Drink",
+      "image": "",
+      "images": [
+        {
+          "src": "hotels/akari-inn/gallery/food/food-1.webp",
+          "cap": "Food & Drink"
+        },
+        {
+          "src": "hotels/akari-inn/gallery/food/food-2.webp",
+          "cap": "Food & Drink"
+        },
+        {
+          "src": "hotels/akari-inn/gallery/food/food-3.webp",
+          "cap": "Food & Drink"
+        },
+        {
+          "src": "hotels/akari-inn/gallery/food/food-4.webp",
+          "cap": "Food & Drink"
+        }
+      ]
+    }
+  ]
+}

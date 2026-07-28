@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hotel Gallery — A Premium Photo Showcase for Your Hotel</title>
+<meta name="description" content="Hotel Gallery gives your property a fast, mobile-first photo showcase that gets guests to call or WhatsApp you directly — no OTA commission, no clutter.">
+
+<!--
+  ============================================================
+  THIS IS THE LANDING PAGE — sells Hotel Gallery to hotel owners
+  and showcases the live demo hotel via an embedded frame.
+  It does NOT touch hotel.html, css/style.css, js/gallery.js, or
+  any hotel.json / gallery folders — the hotel engine is untouched.
+
+  All the text on this page now lives in data/homepage.json —
+  same philosophy as hotel.json for hotel pages. Edit it directly,
+  or open this page with the secret key to edit in the browser:
+      index.html?edit=ownerkey2026
+  (same honest limitations as hotel.html's edit mode — see the
+  comment above EDIT_KEY in js/homepage.js for the full explanation)
+
+  The visual design/CSS below is unchanged from the previous
+  version — only the content became data-driven.
+  ============================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink:#0a0a0a;
+    --paper:#ffffff;
+    --dim:#f4f3f0;
+    --gray:#6b6b6b;
+    --line:rgba(10,10,10,0.12);
+    --line-dark:rgba(255,255,255,0.16);
+    --brass:#b8874b;
+    --brass-dark:#8f6535;
+    --edit:#e05b3c;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  body{font-family:'Inter',sans-serif; color:var(--ink); background:var(--paper); -webkit-font-smoothing:antialiased; line-height:1.5;}
+  a{color:inherit;}
+  img,iframe{max-width:100%; display:block;}
+  .wrap{max-width:1120px; margin:0 auto; padding:0 28px;}
+  h1,h2,h3{font-family:'Fraunces',serif; font-weight:600; line-height:1.08;}
+  .eyebrow{font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--brass-dark); font-weight:600; margin-bottom:14px;}
+  :focus-visible{outline:2px solid var(--brass); outline-offset:3px;}
+
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'Inter',sans-serif; font-weight:600; font-size:0.85rem;
+    padding:14px 26px; border-radius:40px; text-decoration:none;
+    transition:transform .15s ease, opacity .15s ease;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn-primary{background:var(--brass); color:#fff;}
+  .btn-ghost{border:1px solid var(--line-dark); color:#fff;}
+  .btn-ghost-dark{border:1px solid var(--line); color:var(--ink);}
+
+  /* ---------- Nav ---------- */
+  .topnav{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px 28px; background:rgba(255,255,255,0.9); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .topnav .brand{font-family:'Fraunces',serif; font-weight:700; font-size:1.1rem; display:flex; align-items:center; gap:6px;}
+  .topnav .brand .bracket{color:var(--gray); font-weight:400;}
+  .topnav nav{display:flex; align-items:center; gap:22px; font-size:0.85rem; font-weight:500;}
+  .topnav nav a{text-decoration:none; color:var(--ink);}
+  .topnav .btn-primary{padding:11px 20px;}
+  @media (max-width:640px){ .topnav nav a.hide-mobile{display:none;} }
+  .icon-btn{width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:rgba(10,10,10,0.06); border:1px solid var(--line); cursor:pointer;}
+  .edit-toggle.active{background:var(--edit); border-color:var(--edit); color:#fff;}
+
+  /* ---------- Hero ---------- */
+  .hero{background:var(--ink); color:#fff; padding:70px 0 90px;}
+  .hero .wrap{display:grid; grid-template-columns:1.1fr 0.9fr; gap:56px; align-items:center;}
+  @media (max-width:880px){ .hero .wrap{grid-template-columns:1fr; gap:44px;} }
+  .hero h1{font-size:clamp(2.2rem, 5vw, 3.4rem); margin-bottom:22px;}
+  .hero h1 em{font-style:italic; color:var(--brass);}
+  .hero p.lead{font-size:1.02rem; color:rgba(255,255,255,0.72); max-width:46ch; margin-bottom:32px;}
+  .hero .cta-row{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:28px;}
+  .hero .trust{font-size:0.78rem; color:rgba(255,255,255,0.5); letter-spacing:0.02em;}
+
+  /* phone frame showing the REAL live demo hotel page */
+  .phone{
+    justify-self:center;
+    width:300px; border:10px solid #1c1c1c; border-radius:34px;
+    background:#1c1c1c; box-shadow:0 40px 80px rgba(0,0,0,0.5);
+    overflow:hidden; position:relative;
+  }
+  .phone .notch{height:22px; background:#1c1c1c; display:flex; align-items:center; justify-content:center;}
+  .phone .notch::after{content:""; width:70px; height:6px; border-radius:6px; background:#3a3a3a;}
+  .phone iframe{width:100%; height:560px; border:0; background:#111;}
+  .phone-caption{text-align:center; font-size:0.72rem; color:rgba(255,255,255,0.5); margin-top:14px; letter-spacing:0.04em;}
+  #homeChangeDemoBtn{display:none; margin:10px auto 0;}
+  .edit-mode #homeChangeDemoBtn{display:flex; margin-left:auto; margin-right:auto;}
+
+  /* ---------- Section shell ---------- */
+  section{padding:84px 0;}
+  .section-head{max-width:640px; margin:0 auto 52px; text-align:center;}
+  .section-head h2{font-size:clamp(1.7rem, 3.6vw, 2.3rem);}
+  .section-head p{color:var(--gray); font-size:0.98rem; margin-top:14px;}
+
+  /* ---------- Benefits ---------- */
+  .benefits{background:var(--dim);}
+  .benefit-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
+  @media (max-width:880px){ .benefit-grid{grid-template-columns:repeat(2,1fr);} }
+  .benefit{background:var(--paper); padding:34px 28px;}
+  .benefit .num{font-family:'Fraunces',serif; font-size:0.75rem; color:var(--brass-dark); margin-bottom:16px;}
+  .benefit h3{font-size:1.05rem; margin-bottom:10px;}
+  .benefit p{font-size:0.88rem; color:var(--gray);}
+
+  /* ---------- Before / After ---------- */
+  .compare-grid{display:grid; grid-template-columns:1fr 1fr; gap:28px;}
+  @media (max-width:760px){ .compare-grid{grid-template-columns:1fr;} }
+  .compare-card{border-radius:10px; overflow:hidden; border:1px solid var(--line);}
+  .compare-card .tag{padding:16px 20px; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;}
+  .compare-card.bad .tag{background:#efefef; color:var(--gray);}
+  .compare-card.good .tag{background:var(--ink); color:#fff;}
+  .compare-visual{aspect-ratio:4/3; position:relative;}
+  .compare-card.bad .compare-visual{
+    background:#d9d9d6; padding:14px; display:grid; grid-template-columns:1fr 1fr; gap:6px;
+  }
+  .compare-card.bad .compare-visual .tile{background:#c3c1bb; border-radius:2px;}
+  .compare-card.bad .compare-visual .tile:nth-child(1){grid-column:1/3; height:60%;}
+  .compare-card.good .compare-visual{
+    background:linear-gradient(150deg,#0a0a0a,#3d3d3d 55%,#9a9a9a);
+    display:flex; align-items:flex-end; padding:22px;
+  }
+  .compare-card.good .compare-visual span{font-family:'Fraunces',serif; color:#fff; font-size:1rem; position:relative; z-index:2;}
+  .compare-card .note{padding:18px 20px; font-size:0.85rem; color:var(--gray);}
+  .compare-photo{position:absolute; inset:0; background-size:cover; background-position:center; z-index:0;}
+  .compare-photo-overlay{position:absolute; inset:0; background:linear-gradient(0deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.05) 55%); z-index:1;}
+  .compare-photo-actions{display:none; padding:12px 20px 0; gap:10px;}
+  .edit-mode .compare-photo-actions{display:flex;}
+  .compare-photo-btn{font-size:0.72rem; color:var(--edit); border:1px dashed var(--edit); border-radius:14px; padding:6px 12px; background:rgba(224,91,60,0.06);}
+  .compare-photo-btn.remove{color:var(--gray); border-color:var(--line);}
+
+  /* ---------- Pricing ---------- */
+  .pricing-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  @media (max-width:880px){ .pricing-grid{grid-template-columns:1fr; max-width:380px; margin:0 auto;} }
+  .price-card{border:1px solid var(--line); border-radius:12px; padding:32px 26px; display:flex; flex-direction:column;}
+  .price-card.featured{border-color:var(--ink); box-shadow:0 20px 40px rgba(0,0,0,0.08);}
+  .price-card .tier{font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--brass-dark); font-weight:600; margin-bottom:12px;}
+  .price-card .amount{font-family:'Fraunces',serif; font-size:2.1rem; margin-bottom:4px;}
+  .price-card .desc{font-size:0.85rem; color:var(--gray); margin-bottom:22px;}
+  .price-card ul{list-style:none; margin-bottom:10px; flex:1;}
+  .price-card li{font-size:0.88rem; padding:8px 0; border-top:1px solid var(--line); display:flex; gap:10px; align-items:flex-start;}
+  .price-card li:first-child{border-top:none;}
+  .price-card li::before{content:"—"; color:var(--brass-dark);}
+  .price-card .btn{justify-content:center; width:100%;}
+  .feature-remove{display:none; width:18px; height:18px; border-radius:50%; background:var(--edit); color:#fff; font-size:0.6rem; align-items:center; justify-content:center; flex-shrink:0;}
+  .edit-mode .feature-remove{display:flex;}
+  .add-feature-btn{display:none; font-size:0.72rem; color:var(--edit); border:1px dashed var(--edit); border-radius:14px; padding:6px 12px; margin-bottom:16px; background:rgba(224,91,60,0.06);}
+  .edit-mode .add-feature-btn{display:inline-flex;}
+
+  /* ---------- Contact / CTA ---------- */
+  .cta-band{background:var(--ink); color:#fff; text-align:center;}
+  .cta-band h2{font-size:clamp(1.8rem,4vw,2.6rem); margin-bottom:16px;}
+  .cta-band p{color:rgba(255,255,255,0.7); max-width:48ch; margin:0 auto 34px;}
+  .contact-links{display:flex; justify-content:center; gap:14px; flex-wrap:wrap;}
+  #homeEditContactBtn{display:none; margin-top:16px;}
+  .edit-mode #homeEditContactBtn{display:inline-flex;}
+
+  footer{background:var(--ink); color:rgba(255,255,255,0.45); text-align:center; padding:26px; font-size:0.72rem; letter-spacing:0.04em; border-top:1px solid var(--line-dark);}
+
+  /* ---------- Edit mode ---------- */
+  [contenteditable="true"]{ outline:1px dashed transparent; border-radius:3px; padding:1px 4px; margin:-1px -4px; }
+  .edit-mode [contenteditable="true"]{ outline-color:rgba(224,91,60,0.6); background:rgba(224,91,60,0.08); cursor:text; }
+  .edit-mode [contenteditable="true"]:focus{ outline-color:var(--edit); background:rgba(224,91,60,0.14); }
+  .edit-toolbar{
+    position:fixed; left:0; right:0; bottom:0; z-index:80;
+    display:none; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;
+    padding:14px 16px; background:var(--ink); border-top:1px solid var(--line-dark);
+  }
+  .edit-mode .edit-toolbar{display:flex;}
+  .edit-toolbar .pill{font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase; padding:9px 14px; border-radius:20px; border:1px solid var(--line-dark); color:#fff; background:transparent;}
+  .edit-toolbar .pill.primary{background:var(--edit); border-color:var(--edit);}
+  .edit-mode body{padding-bottom:0;}
+  .edit-mode{padding-bottom:60px;}
+  input[type=file]{display:none;}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <span class="brand"><span class="bracket">[</span> Hotel Gallery <span class="bracket">]</span></span>
+  <nav>
+    <a href="#benefits" class="hide-mobile">Why It Works</a>
+    <a href="#demo" class="hide-mobile">Live Demo</a>
+    <a href="#pricing" class="hide-mobile">Pricing</a>
+    <button class="icon-btn edit-toggle" id="homeEditToggle" title="Edit this page" style="display:none;">✎</button>
+    <a href="#contact" class="btn btn-primary">Get Started</a>
+  </nav>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow" id="homeHeroEyebrow" contenteditable="false" style="color:var(--brass);">For Hotels Across India</div>
+      <h1 id="homeHeroTitle" contenteditable="false">Your rooms look <em>incredible</em>.<br>Does your listing?</h1>
+      <p class="lead" id="homeHeroSubtitle" contenteditable="false"></p>
+      <div class="cta-row">
+        <a href="#demo" class="btn btn-primary" id="homeCtaPrimary" contenteditable="false">See The Live Demo →</a>
+        <a href="#contact" class="btn btn-ghost" id="homeCtaSecondary" contenteditable="false">Get Your Hotel Listed</a>
+      </div>
+      <div class="trust" id="homeTrustLine" contenteditable="false"></div>
+    </div>
+
+    <div>
+      <div class="phone">
+        <div class="notch"></div>
+        <iframe id="homeDemoFrame" src="hotel.html?hotel=akari-inn" title="Live Hotel Gallery demo" loading="lazy"></iframe>
+      </div>
+      <div class="phone-caption" id="homePhoneCaption" contenteditable="false"></div>
+      <button class="btn btn-ghost-dark" id="homeChangeDemoBtn" style="border-color:rgba(255,255,255,0.3); color:#fff;">Change Demo Hotel</button>
+    </div>
+  </div>
+</section>
+
+<section class="benefits" id="benefits">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow" id="homeBenefitsEyebrow" contenteditable="false">Why It Works</div>
+      <h2 id="homeBenefitsTitle" contenteditable="false"></h2>
+      <p id="homeBenefitsSub" contenteditable="false"></p>
+    </div>
+    <div class="benefit-grid" id="homeBenefitsGrid"></div>
+  </div>
+</section>
+
+<section class="compare">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow" id="homeCompareEyebrow" contenteditable="false">The Difference</div>
+      <h2 id="homeCompareTitle" contenteditable="false"></h2>
+    </div>
+    <div class="compare-grid">
+      <div class="compare-card bad">
+        <div class="tag" id="homeCompareBadTag" contenteditable="false">Typical OTA Listing</div>
+        <div class="compare-visual" id="homeCompareBadVisual">
+          <div class="tile"></div><div class="tile"></div><div class="tile"></div>
+        </div>
+        <div class="compare-photo-actions" id="homeCompareBadActions"></div>
+        <p class="note" id="homeCompareBadNote" contenteditable="false"></p>
+      </div>
+      <div class="compare-card good">
+        <div class="tag" id="homeCompareGoodTag" contenteditable="false">Hotel Gallery Page</div>
+        <div class="compare-visual" id="homeCompareGoodVisual"><span id="homeCompareGoodLabel" contenteditable="false">Your Hotel</span></div>
+        <div class="compare-photo-actions" id="homeCompareGoodActions"></div>
+        <p class="note" id="homeCompareGoodNote" contenteditable="false"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="demo" style="background:var(--dim);">
+  <div class="wrap" style="text-align:center;">
+    <div class="eyebrow" id="homeDemoEyebrow" contenteditable="false">See It Yourself</div>
+    <h2 style="font-size:clamp(1.7rem,3.6vw,2.3rem); margin-bottom:18px;" id="homeDemoTitle" contenteditable="false"></h2>
+    <p style="color:var(--gray); max-width:48ch; margin:0 auto 30px;" id="homeDemoSub" contenteditable="false"></p>
+    <a href="hotel.html?hotel=akari-inn" data-demo-link class="btn btn-ghost-dark" style="border-color:var(--ink);" target="_blank" id="homeDemoButtonLabel" contenteditable="false">Open Full Demo ↗</a>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow" id="homePricingEyebrow" contenteditable="false">Pricing</div>
+      <h2 id="homePricingTitle" contenteditable="false"></h2>
+      <p id="homePricingSub" contenteditable="false"></p>
+    </div>
+    <div class="pricing-grid" id="homePricingGrid"></div>
+  </div>
+</section>
+
+<section class="cta-band" id="contact">
+  <div class="wrap">
+    <div class="eyebrow" id="homeCtaEyebrow" contenteditable="false" style="color:var(--brass);">Get In Touch</div>
+    <h2 id="homeCtaTitle" contenteditable="false"></h2>
+    <p id="homeCtaSub" contenteditable="false"></p>
+    <div class="contact-links">
+      <a href="tel:+9100000000" class="btn btn-ghost" id="homeCallLink">Call Us</a>
+      <a href="https://wa.me/9100000000" class="btn btn-primary" id="homeWaLink" target="_blank">WhatsApp Us</a>
+      <a href="mailto:info@hotelgallery.in" class="btn btn-ghost" id="homeEmailLink">Email Us</a>
+    </div>
+    <button class="btn btn-ghost-dark" id="homeEditContactBtn" style="border-color:rgba(255,255,255,0.3); color:#fff;">Edit Contact Details</button>
+  </div>
+</section>
+
+<footer id="homeFooter" contenteditable="false">© 2026 Hotel Gallery. All Rights Reserved.</footer>
+
+<div class="edit-toolbar">
+  <span class="pill" style="border:none;">Edit Mode — click any text to change it</span>
+  <button class="pill" id="homeExportBtn">Export homepage.json</button>
+  <button class="pill" id="homeImportBtn">Import Backup</button>
+  <button class="pill" id="homeResetBtn" title="Discard local preview edits, reload the real published homepage.json">Reset to Published</button>
+  <button class="pill primary" id="homeDoneBtn">Done Editing</button>
+  <input type="file" id="homeImportFile" accept="application/json">
+</div>
+
+<script src="js/homepage.js"></script>
+</body>
+</html>

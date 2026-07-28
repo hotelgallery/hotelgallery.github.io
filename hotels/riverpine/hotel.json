@@ -1,0 +1,23 @@
+{
+  "name": "River Pine",
+  "eyebrow": "Kasol · Himachal",
+  "tagline": "Riverside rooms tucked among pine forest, a short walk from the market.",
+  "phone": "+91 00000 00000",
+  "phoneHref": "tel:+9100000000",
+  "whatsapp": "+91 00000 00000",
+  "whatsappHref": "https://wa.me/9100000000",
+  "email": "info@riverpine.example.com",
+  "mapsUrl": "https://maps.google.com",
+  "heroImage": "",
+  "contactEyebrow": "Get in touch",
+  "contactHeading": "Plan your stay",
+  "footerText": "© 2026 Hotel Gallery. All Rights Reserved.",
+  "categories": [
+    { "key": "exterior",   "label": "Exterior",     "image": "", "images": [] },
+    { "key": "interior",   "label": "Interior",     "image": "", "images": [] },
+    { "key": "rooms",      "label": "Rooms",        "image": "", "images": [] },
+    { "key": "bathrooms",  "label": "Bathrooms",    "image": "", "images": [] },
+    { "key": "amenities",  "label": "Amenities",    "image": "", "images": [] },
+    { "key": "food",       "label": "Food & Drink", "image": "", "images": [] }
+  ]
+}

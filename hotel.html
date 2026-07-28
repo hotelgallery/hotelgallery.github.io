@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hotel Gallery</title>
+
+<!--
+  ============================================================
+  HOTEL GALLERY — ONE ENGINE, UNLIMITED HOTELS
+  ============================================================
+  This single page renders ANY hotel. Which one depends on the
+  URL: hotel.html?hotel=akari-inn loads hotels/akari-inn/hotel.json
+  hotel.html?hotel=snowparadise loads hotels/snowparadise/hotel.json
+  ...and so on. No new HTML file needed per hotel.
+
+  TO ADD A NEW HOTEL:
+  1. Duplicate the hotels/akari-inn folder, rename it to the new
+     hotel's slug (lowercase, no spaces, e.g. "snow-paradise").
+  2. Edit that folder's hotel.json (name, phone, whatsapp, email,
+     Google Maps link, and photo file paths).
+  3. Drop real photos into that folder's gallery/<category>/ folders.
+  4. Link to it as hotel.html?hotel=snow-paradise (or set up index.html
+     to list it).
+  5. Commit & push to GitHub — it's live.
+
+  TO EDIT A HOTEL IN THE BROWSER (no code needed):
+  Open the page with a secret key, e.g.:
+    hotel.html?hotel=akari-inn&edit=ownerkey2026
+  This unlocks the pencil icon for THIS BROWSER ONLY. Nobody else
+  sees it. Edits preview instantly but only apply to everyone once
+  you Export the updated hotel.json and replace the real file — see
+  README.md in this project for the full explanation.
+  ============================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="topbar">
+  <span class="brand"><span class="bracket">[</span><span class="hotel-name" id="fieldName" contenteditable="false" spellcheck="false">Akari Inn</span><span class="bracket">]</span></span>
+  <div class="topbar-right">
+    <button class="icon-btn edit-toggle" id="editToggle" aria-label="Toggle edit mode" title="Edit this site" style="display:none;">✎</button>
+    <button class="icon-btn hamburger" id="menuBtn" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="menu-overlay" id="menuOverlay">
+  <button class="lb-close" id="menuClose" aria-label="Close menu" style="position:absolute; top:22px; right:26px;">✕</button>
+  <nav id="menuLinks"></nav>
+  <div class="contact-row">
+    <a id="menuCall" href="#">Call</a>
+    <a id="menuWhatsapp" href="#" target="_blank">WhatsApp</a>
+    <a id="menuEmail" href="#">Email</a>
+  </div>
+</div>
+
+<section class="carousel" id="carousel">
+  <span class="car-count" id="carCount">1 / 7</span>
+  <button class="icon-btn cover-edit" id="heroCoverBtn" title="Register this slide's cover photo (type filename, no upload)" style="top:70px; right:26px; position:absolute; z-index:21;">📷</button>
+  <div id="carTrack"></div>
+  <button class="car-nav car-prev" id="carPrev" aria-label="Previous">‹</button>
+  <button class="car-nav car-next" id="carNext" aria-label="Next">›</button>
+  <div class="car-dots" id="carDots"></div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <div class="contact-eyebrow" id="fieldContactEyebrow" contenteditable="false">Get in touch</div>
+    <h2 id="fieldContactHeading" contenteditable="false">Plan your stay</h2>
+    <div class="contact-list">
+      <div class="contact-row"><span><span class="label">Location</span><span class="value" id="cLocation" contenteditable="false">View on map</span></span><button class="icon-btn cover-edit" id="editLocationBtn" title="Paste this hotel's Google Maps link" style="position:static; width:30px; height:30px; margin-right:8px;">📍</button><a class="go" id="cLocationLink" href="#" target="_blank">↗</a></div>
+      <div class="contact-row"><span><span class="label">Call</span><span class="value" id="cPhone" contenteditable="false">+91 00000 00000</span></span><a class="go" id="cPhoneLink" href="#">↗</a></div>
+      <div class="contact-row"><span><span class="label">WhatsApp</span><span class="value" id="cWhats" contenteditable="false">+91 00000 00000</span></span><a class="go" id="cWhatsLink" href="#" target="_blank">↗</a></div>
+      <div class="contact-row"><span><span class="label">Email</span><span class="value" id="cEmail" contenteditable="false">info@hotel.com</span></span><a class="go" id="cEmailLink" href="#">↗</a></div>
+    </div>
+  </div>
+</section>
+
+<footer id="fieldFooter" contenteditable="false">© 2026 Hotel Gallery. All Rights Reserved.</footer>
+
+<div class="edit-toolbar">
+  <span class="pill" style="border:none; color:var(--amber-light);">Edit Mode — click any text, or a photo tile, to change it</span>
+  <button class="pill" id="exportBtn">Export hotel.json</button>
+  <button class="pill" id="importBtn">Import Backup</button>
+  <button class="pill" id="resetBtn" title="Discard local preview edits, reload the real published hotel.json">Reset to Published</button>
+  <button class="pill primary" id="doneBtn">Done Editing</button>
+  <input type="file" id="importFile" accept="application/json">
+</div>
+
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-top">
+    <span class="lb-title" id="lbTitle">Rooms</span>
+    <span class="lb-count" id="lbCount">1 / 5</span>
+    <button class="lb-close" id="lbClose" aria-label="Close gallery">✕</button>
+  </div>
+  <div class="lb-stage">
+    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous photo">‹</button>
+    <div class="lb-track" id="lbTrack"></div>
+    <button class="lb-nav lb-next" id="lbNext" aria-label="Next photo">›</button>
+  </div>
+  <button class="pill lb-add" id="lbAddBtn">+ Add Photo to this Gallery</button>
+  <div class="lb-dots" id="lbDots"></div>
+</div>
+
+
+<script src="js/gallery.js"></script>
+</body>
+</html>
