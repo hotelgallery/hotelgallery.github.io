@@ -19,7 +19,7 @@
       "image": "",
       "images": [
         {
-          "src": "hotels/akari-inn/gallery/exterior/exterior-1.webp",
+          "src": "hotels/akari-inn/gallery/exterior/exterior-0.webp",
           "cap": "Exterior"
         },
         {
@@ -42,11 +42,7 @@
       "image": "",
       "images": [
         {
-          "src": "hotels/akari-inn/gallery/interior/interior-1.webp",
-          "cap": "Interior"
-        },
-        {
-          "src": "hotels/akari-inn/gallery/interior/interior-2.webp",
+          "src": "hotels/akari-inn/gallery/interior/interior-0.webp",
           "cap": "Interior"
         },
         {
@@ -69,7 +65,7 @@
       "image": "",
       "images": [
         {
-          "src": "hotels/akari-inn/gallery/rooms/room-1.webp",
+          "src": "hotels/akari-inn/gallery/rooms/room-0.webp",
           "cap": "Rooms"
         },
         {
@@ -115,7 +111,7 @@
       "image": "",
       "images": [
         {
-          "src": "hotels/akari-inn/gallery/amenities/amenities-1.webp",
+          "src": "hotels/akari-inn/gallery/amenities/amenities-0.webp",
           "cap": "Amenities"
         },
         {
