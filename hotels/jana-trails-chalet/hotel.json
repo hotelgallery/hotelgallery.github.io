@@ -1,0 +1,180 @@
+{
+  "name": "Jana Trails Chalet",
+  "eyebrow": "Near Naggar · Manali · Himachal",
+  "tagline": "A Luxury Retreat in the Heart of the Himalayas",
+  "phone": "+91 9816867759",
+  "phoneHref": "tel:+919816867759",
+  "whatsapp": "+91 9816867759",
+  "whatsappHref": "https://wa.me/919816867759",
+  "email": "thejanatrails@gmail.com",
+  "mapsUrl": "https://share.google/yf4bEL8P5CuY24izL",
+  "heroImage": "hotels/jana-trails-chalet/gallery/hero/cover.webp",
+  "contactEyebrow": "Get in touch",
+  "contactHeading": "Plan your stay",
+  "footerText": "© 2026 Hotel Gallery. All Rights Reserved.",
+  "categories": [
+    {
+      "key": "exterior",
+      "label": "Exterior",
+      "image": "",
+      "images": [
+        {
+          "src": "hotels/jana-trails-chalet/gallery/exterior/exterior1.webp",
+          "cap": "Exterior"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/exterior/exterior2.webp",
+          "cap": "Exterior"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/exterior/exterior3.webp",
+          "cap": "Exterior"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/exterior/exterior4.webp",
+          "cap": "Exterior"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/exterior/exterior5.webp",
+          "cap": "Exterior"
+        } 
+      ]
+    },
+    {
+      "key": "interior",
+      "label": "Interior",
+      "image": "",
+      "images": [
+        {
+          "src": "hotels/jana-trails-chalet/gallery/interior/interior1.webp",
+          "cap": "Interior"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/interior/interior2.webp",
+          "cap": "Interior"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/interior/interior3.webp",
+          "cap": "Interior"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/interior/interior4.webp",
+          "cap": "Interior"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/interior/interior5.webp",
+          "cap": "Interior"
+        }
+      ]
+    },
+    {
+      "key": "rooms",
+      "label": "Rooms",
+      "image": "",
+      "images": [
+        {
+          "src": "hotels/jana-trails-chalet/gallery/rooms/room1.webp",
+          "cap": "Rooms"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/rooms/room2.webp",
+          "cap": "Rooms"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/rooms/room3.webp",
+          "cap": "Rooms"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/rooms/room4.webp",
+          "cap": "Rooms"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/rooms/room5.webp",
+          "cap": "Rooms"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/rooms/room6.webp",
+          "cap": "Rooms"
+        }
+      ]
+    },
+    {
+      "key": "bathrooms",
+      "label": "Bathrooms",
+      "image": "",
+      "images": [
+        {
+          "src": "hotels/jana-trails-chalet/gallery/bathrooms/bathroom1.webp",
+          "cap": "Bathrooms"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/bathrooms/bathroom2.webp",
+          "cap": "Bathrooms"
+        },
+        {
+         "src": "hotels/jana-trails-chalet/gallery/bathrooms/bathroom3.webp",
+          "cap": "Bathrooms"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/bathrooms/bathroom4.webp",
+          "cap": "Bathrooms"
+        }
+      ]
+    },
+    {
+      "key": "amenities",
+      "label": "Amenities",
+      "image": "",
+      "images": [
+        {
+          "src": "hotels/jana-trails-chalet/gallery/amenities/amenities1.webp",
+          "cap": "Amenities"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/amenities/amenities2.webp",
+          "cap": "Amenities"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/amenities/amenities3.webp",
+          "cap": "Amenities"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/amenities/amenities4.webp",
+          "cap": "Amenities"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/amenities/amenities5.webp",
+          "cap": "Amenities"
+        }
+      ]
+    },
+    {
+      "key": "food",
+      "label": "Food & Drink",
+      "image": "",
+      "images": [
+        {
+          "src": "hotels/jana-trails-chalet/gallery/food/food&drink1.webp",
+          "cap": "Food & Drink"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/food/food&drink2.webp",
+          "cap": "Food & Drink"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/food/food&drink3.webp",
+          "cap": "Food & Drink"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/food/food&drink4.webp",
+          "cap": "Food & Drink"
+        },
+        {
+          "src": "hotels/jana-trails-chalet/gallery/food/food&drink5.webp",
+          "cap": "Food & Drink"
+        }
+
+      ]
+    }
+  ]
+}
