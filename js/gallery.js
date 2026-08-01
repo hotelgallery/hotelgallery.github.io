@@ -47,7 +47,14 @@ const HERO_GRADIENT = "linear-gradient(150deg,#0a0a0a,#3d3d3d 55%,#6b6b6b 100%)"
 
 /* ---------- Which hotel, and where its data lives ---------- */
 const urlParams = new URLSearchParams(window.location.search);
-const HOTEL_SLUG = urlParams.get('hotel') || 'akari-inn';
+
+const pathSlug = window.location.pathname
+  .replace(/^\/+|\/+$/g, '');
+
+const HOTEL_SLUG =
+  urlParams.get('hotel') ||
+  pathSlug ||
+  'akari-inn';
 const HOTEL_JSON_PATH = `hotels/${HOTEL_SLUG}/hotel.json`;
 const STORAGE_KEY = `hg_preview_${HOTEL_SLUG}`; // local-only preview edits, per hotel
 
