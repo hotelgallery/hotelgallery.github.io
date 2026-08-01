@@ -49,7 +49,8 @@ const HERO_GRADIENT = "linear-gradient(150deg,#0a0a0a,#3d3d3d 55%,#6b6b6b 100%)"
 const urlParams = new URLSearchParams(window.location.search);
 
 const pathSlug = window.location.pathname
-  .replace(/^\/+|\/+$/g, '');
+  .replace(/^\/+|\/+$/g, '')
+  .split('/')[0];
 
 const HOTEL_SLUG =
   urlParams.get('hotel') ||
